@@ -1,0 +1,32 @@
+{
+    "title": "Hello Electron",
+    "icon": "./logo.icns",
+    "background": "./background.png",
+    "icon-size": 80,
+    "contents": [
+        {
+            "x": 430,
+            "y": 130,
+            "type": "link",
+            "path": "/Applications"
+        },
+        {
+            "x": 150,
+            "y": 130,
+            "type": "file",
+            "path": "../../out/hello.app"
+        },
+        {
+            "x": 150,
+            "y": 1130,
+            "type": "position",
+            "path": ".background"
+        },
+        {
+            "x": 400,
+            "y": 1130,
+            "type": "position",
+            "path": ".VolumeIcon.icns"
+        }
+    ]
+}
