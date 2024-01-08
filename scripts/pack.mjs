@@ -136,7 +136,7 @@ async function createDMG() {
 async function start() {
     await dirInit();
     await initSource();
-    // await encryptFile();
+    await encryptFile();
     await createAsar();
     await removeSouce();
     await updateIcns();
