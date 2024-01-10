@@ -5,8 +5,7 @@
   "type": "commonjs",
   "main": "app/index.js",
   "scripts": {
-    "pack": "node ./scripts/pack.mjs",
-    "download": "node ./scripts/download.mjs",
+    "generate": "node ./scripts/generate.mjs",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
@@ -22,7 +21,6 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
     "@electron/asar": "^3.2.8",
     "appdmg": "^0.6.6",
-    "creator-asar": "file:.electron/creator-asar",
     "electron": "13.1.4",
     "fs-extra": "^11.2.0",
     "progress": "^2.0.3",

@@ -1,14 +1,20 @@
 import { join, basename, extname } from 'path';
 import { ensureDir, emptydir, copy, remove } from 'fs-extra'
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, createWriteStream } from 'fs';
 import { createPackage } from '@electron/asar';
 import appdmg from 'appdmg';
 import ProgressBar from 'progress';
 import {recursiveDir, spawnAsync} from './utils.mjs';
 import xxtea from 'xxtea-node';
+import axios from "axios";
+import extract from "extract-zip";
 
-const isTest = true; // 是否使用测试的 electron 版本
+const isDiy = true; // 是否使用定制的 electron 版本
 const root = process.cwd();
+
+const urlLocal = join(root, './.electron/13.1.4-ccc/')
+const urlLocalZip = join(root, './.electron/13.1.4-ccc.zip')
+const urlDownload = 'http://ftp.cocos.org/TestBuilds/Fireball/Electron/13.1.4/electron-v13.1.4-360-newkey-darwin.zip';
 
 const publishPath = join(root, './out');
 const dmgPath = join(publishPath, 'hello.dmg');
@@ -17,7 +23,7 @@ const electronPath = join(publishPath, 'hello.app');
 const appPath = join(electronPath, 'Contents/Resources/app');
 const cocosPath = join(electronPath, 'Contents/Resources/cocos');
 
-const sourceElectronPath = isTest ? join(root, '.electron/13.1.4-ccc/Electron.app') : join(root, 'node_modules/electron/dist/Electron.app');
+const sourceElectronPath = isDiy ? join(root, '.electron/13.1.4-ccc/Electron.app') : join(root, 'node_modules/electron/dist/Electron.app');
 const sourceAppPath = join(root, 'app');
 const sourceCocosPath = join(root, 'cocos');
 
@@ -25,6 +31,50 @@ async function dirInit() {
     await ensureDir(publishPath);
     await ensureDir(electronPath);
     await emptydir(electronPath);
+    await ensureDir(urlLocal);
+}
+
+async function electronDownload() {
+    const response = await axios({
+        method: 'GET',
+        url: urlDownload,
+        responseType: 'stream',
+    });
+
+    // 使用管道流将文件写入到指定路径
+    response.data.pipe(createWriteStream(urlLocalZip));
+
+    return new Promise((resolve, reject) => {
+        response.data.on('end', async () => {
+            resolve();
+        });
+
+        response.data.on('error', (err) => {
+            reject(err);
+        });
+    });
+}
+
+async function electronUnzip() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await extract(urlLocalZip, {
+                dir: urlLocal,
+            } )
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function prepareElectron() {
+    if(!existsSync(join(urlLocal, 'Electron.app'))) {
+        if(!existsSync(urlLocalZip)) {
+            await electronDownload();
+        }
+        await electronUnzip();
+    } 
 }
 
 async function initSource() {
@@ -39,7 +89,7 @@ async function removeSouce() {
     await remove(cocosPath);
 }
 
-async function encryptFile(file) {
+async function encryptFile() {
     const encryptKey = process.env['Creator3D_encryptKey_0623']  || '1234567890';
     function canSkipEncrypt(file) {
         const result =  basename(file) === 'require.js' 
@@ -135,8 +185,10 @@ async function createDMG() {
 
 async function start() {
     await dirInit();
+    await prepareElectron();
+    
     await initSource();
-    await encryptFile();
+    // await encryptFile();
     await createAsar();
     await removeSouce();
     await updateIcns();
@@ -154,17 +206,3 @@ start();
 
 
 
-
-
-
-
-
-
-
-// backup
-async function backup() {
-    // 定制的 asar 只能用 cli 的方式调用
-    const ccAsarCmd = join(root, './node_modules/creator-asar/bin/asar');
-    await spawnAsync(ccAsarCmd, ['pack', appPath, join(appPath, '../app.asar')]);
-    await spawnAsync(ccAsarCmd, ['pack', cocosPath, join(cocosPath, '../cocos.asar')]);
-}
