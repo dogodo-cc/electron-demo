@@ -10,12 +10,18 @@ const createWindow = () => {
     width: 600,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
 
   // 加载 index.html
-  mainWindow.loadFile(path.join(__dirname, 'index.html'))
+  if( app.isPackaged) {
+    mainWindow.loadFile(path.join(__dirname, 'index.html'))
+  } else {
+   mainWindow.loadURL( 'http://localhost:5555/')
+   // mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
+  }
+  
 
   // 打开开发工具
   // mainWindow.webContents.openDevTools()
