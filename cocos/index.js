@@ -16,7 +16,7 @@ const createWindow = () => {
 
   // 加载 index.html
   if( app.isPackaged) {
-    mainWindow.loadFile(path.join(__dirname, 'index.html'))
+    mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
   } else {
    mainWindow.loadURL( 'http://localhost:5555/')
    // mainWindow.loadFile(path.join(__dirname, './dist/index.html'))

@@ -7,5 +7,8 @@ export default defineConfig({
   root: './cocos',
   server: {
     port: 5555,
+  },
+  build: {
+    minify: false,
   }
 })

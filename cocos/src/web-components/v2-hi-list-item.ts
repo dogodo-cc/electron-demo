@@ -1,17 +1,31 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('ui-list-item')
+export const name = 'v2-ui-list-item'
+
+type IValue = {
+    id: string,
+    name: string
+}
+
+@customElement(name)
 export class SortListItem extends LitElement {
     constructor() {
         super();
-        this.draggable = true;
         this.addEventListener('dragstart', this.itemDragstart);
         this.addEventListener('dragend', this.itemDragend);
     }
 
+    @property()
+    value: IValue = {id: '', name: ''};
+
+    connectedCallback(): void {
+        super.connectedCallback();
+        this.draggable = true;
+    }
+
     render() {
-        return html`<slot></slot>`;
+        return html`<div>${this.value.name} <button @click="${this.itemClick}">click</button></div>`;
     }
     private itemDragstart(event: DragEvent) {
         let index: null | string | number = this.getAttribute('index');
@@ -47,6 +61,20 @@ export class SortListItem extends LitElement {
         );
     }
 
+    private itemClick(event: MouseEvent) {
+        this.dispatchEvent(
+            new CustomEvent('item-click', {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    event,
+                    item: this,
+                    data: this.value
+                },
+            })
+        );
+    }
+
     static styles = css`
         :host {
             display: block;
@@ -59,6 +87,6 @@ export class SortListItem extends LitElement {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'ui-list-item': SortListItem;
+        'name': SortListItem;
     }
 }

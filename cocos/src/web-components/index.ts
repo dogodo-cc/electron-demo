@@ -1,5 +1,7 @@
-import('./hi-list')
-import('./hi-list-item')
+export default async function () {
+    await import('./sort-list')
+    await import('./sort-list-item')
 
-// fixme: 为了外面 import 的时候 ts 报错，这里随便写个函数
-export default function () {}
+    await import('./v2-hi-list');
+    await import('./v2-hi-list-item');
+}
