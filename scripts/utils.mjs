@@ -1,46 +1,34 @@
-import { readdir, stat } from "fs";
+import { readdir, stat } from "fs:promises";
 import { join, extname, normalize, basename } from "path";
 import { spawn } from 'child_process';
 
 // 递归一个文件夹
-export function recursiveDir(
-    folderPath,
-    callback, 
-    options = {
-        ignore: [],
-        ignoreDir: [],
-    }
+async function recursiveDir(
+  folderPath,
+  callback,
+  options = {
+      filter: (file) => {
+          return false; // 默认不跳过任何文件
+      },
+  }
 ) {
-  readdir(folderPath, (err, files) => {
-    if (err) {
-      console.error(`Error reading directory ${folderPath}: ${err}`);
-      return;
-    }
-
-    files.forEach((file) => {
+  const files = await readdir(folderPath);
+  for (const file of files) {
       const filePath = join(folderPath, file);
+      const stats = await stat(filePath);
 
-      stat(filePath, (statErr, stats) => {
-        if (statErr) {
-          console.error(`Error getting file stats for ${filePath}: ${statErr}`);
-          return;
-        }
+      if (options.filter?.(file)) {
+          continue;
+      }
 
-        if (stats.isDirectory()) {
-            const dirName = basename(normalize(filePath));
-            if(!options.ignoreDir.includes(dirName)) {
-                recursiveDir(filePath, callback, options);
-            }
-        } else {
-          const ext = extname(filePath);
-          if (!options.ignore.includes(ext)) {
-            callback(filePath);
-          }
-        }
-      });
-    });
-  });
+      if (stats.isDirectory()) {
+          await recursiveDir(filePath, callback, options);
+      } else {
+          await callback(filePath);
+      }
+  }
 }
+
 
 export function spawnAsync (...args) {
   return new Promise((res, reject) => {

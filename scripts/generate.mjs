@@ -119,19 +119,11 @@ async function encryptFile() {
     recursiveDir(
         appPath, 
         encryptExec,
-        {
-            ignoreDir: ['.git'],
-            ignore: []
-        }
     );
 
     recursiveDir(
         cocosPath, 
         encryptExec,
-        {
-            ignoreDir: ['.git'],
-            ignore: []
-        }
     );
 
 }
