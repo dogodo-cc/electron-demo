@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import './style.css'
 import App from './App.vue'
-import init from './web-components/index.ts'
+import './web-components/list/index'
+import './web-components/list-item/index'
 
 
-Vue.config.ignoredElements = [/^ui-/, /^v2-/];
+Vue.config.ignoredElements = [/^ui-/];
 
 (async function() {
-    await init();
     new Vue(App).$mount('#app')
 })()

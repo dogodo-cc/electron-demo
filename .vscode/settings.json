@@ -1,0 +1,15 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "diffEditor.codeLens": true,
+    "eslint.format.enable": true,
+    "eslint.ignoreUntitled": true,
+    "eslint.lintTask.enable": true,
+    "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue"],
+    "eslint.validate": [],
+    "eslint.run": "onSave",
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

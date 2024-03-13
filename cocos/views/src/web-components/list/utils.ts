@@ -1,9 +1,9 @@
 export function sortArray<T>(array:T[], fromIndex: number, toIndex: number, insertBefore: boolean): T[] {
     const list = [...array];
-    
+
     // 越界检查
-    if (fromIndex < 0 || fromIndex >= list.length || toIndex < 0 || toIndex >= list.length || fromIndex === toIndex) {
-        console.error(`cannot drag ${fromIndex} to ${toIndex}`, list);
+    if (fromIndex < 0 || fromIndex >= list.length || toIndex < 0 || toIndex >= list.length || toIndex === fromIndex) {
+        // console.error(`cannot drag ${fromIndex} to ${toIndex}`);
         return array;
     }
 
