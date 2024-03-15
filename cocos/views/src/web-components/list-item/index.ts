@@ -34,7 +34,7 @@ export class ListItem extends LitElement {
             <div class="content"><slot></slot></div>
             ${this.showSuffix
                 ? html`<div class="suffix">
-                      <slot name="suffix"><button @click="${this.itemDelete}" class="delete-icon" color="" value="del"></button></slot>
+                      <slot name="suffix"><button @click="${this.itemDelete}" class="delete-icon" color="" value="del">delete</button></slot>
                   </div>`
                 : ''}
         `;
@@ -127,13 +127,13 @@ export class ListItem extends LitElement {
             position: relative;
             min-width: 16px;
             margin-left: 10px;
-        }
-        .suffix .delete-icon {
-            cursor: pointer;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            & .delete-icon {
+                cursor: pointer;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
         }
     `;
 }

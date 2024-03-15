@@ -4,7 +4,7 @@
 
         <div class="warp">
             <ui-list @change="change" :list.prop="list">
-                <ui-list-item v-for="(item, index) in list" :key="item.id" :index="index" show-prefix draggable="true">
+                <ui-list-item v-for="(item, index) in list" :key="item.id" :index="index" show-prefix show-suffix draggable="true">
                     {{ item.name }} <button @click="clickHandle(item)">delte</button>
                 </ui-list-item>
             </ui-list>
