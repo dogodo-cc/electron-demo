@@ -2,6 +2,8 @@
     <div>
         <HelloWorld msg="Vite + Vue" />
 
+        <input value="abc" type="date" @change="onchange" @input="oninput" />
+
         <div class="warp">
             <ui-list @change="change" :list.prop="list">
                 <ui-list-item v-for="(item, index) in list" :key="item.id" :index="index" show-prefix show-suffix draggable="true">
@@ -15,6 +17,7 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue';
 import { ref } from 'vue';
+import mermaid from 'mermaid';
 const list = ref([
     {
         name: 'item1',
@@ -65,6 +68,27 @@ function change(event: CustomEvent) {
 function clickHandle(item: any) {
     console.log(item);
 }
+
+function onchange(e: Event) {
+    console.log('change:', e);
+}
+function oninput(e: Event) {
+    console.log('input:', e);
+}
+
+async function go() {
+    const s = await mermaid.render(
+        'a',
+        `flowchart LR
+        A[数据源]
+        B(编辑元素)
+        C[消费者]
+
+        A --> |输入默认值|B --> |输出最终值|C`
+    );
+    console.log(s);
+}
+go();
 </script>
 
 <style scoped>
