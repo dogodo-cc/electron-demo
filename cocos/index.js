@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('path');
 require('./menu.js');
 
@@ -46,3 +46,27 @@ app.on('window-all-closed', () => {
 
 // 在当前文件中你可以引入所有的主进程代码
 // 也可以拆分成几个文件，然后用 require 导入。
+
+ipcMain.on('show-context-menu', (event) => {
+    const template = [
+        {
+            label: 'Menu Item 1',
+            click: () => {
+                event.sender.send('context-menu-command', 'menu-item-1');
+            },
+        },
+        { type: 'separator' },
+        { label: 'Menu Item 2', type: 'checkbox', checked: true },
+        {
+            label: 'test',
+            submenu: [
+                {
+                    label: 'Learn More',
+                    sublabel: 'ddddd',
+                },
+            ],
+        },
+    ];
+    const menu = Menu.buildFromTemplate(template);
+    menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
+});
