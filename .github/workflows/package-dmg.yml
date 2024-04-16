@@ -30,7 +30,7 @@ jobs:
 
             - name: 切换 node 版本
               if: contains(github.event.head_commit.message, 'pack')
-              run: nvm use
+              run: node -v
 
             - name: 安装依赖
               if: contains(github.event.head_commit.message, 'pack')
