@@ -1,19 +1,19 @@
 import { join, basename, extname } from 'path';
-import { ensureDir, emptydir, copy, remove } from 'fs-extra'
+import { ensureDir, emptydir, copy, remove } from 'fs-extra';
 import { existsSync, readFileSync, writeFileSync, createWriteStream } from 'fs';
 import { createPackage } from '@electron/asar';
 import appdmg from 'appdmg';
 import ProgressBar from 'progress';
-import {recursiveDir, spawnAsync} from './utils.mjs';
+// import { recursiveDir, spawnAsync } from './utils.mjs';
 import xxtea from 'xxtea-node';
-import axios from "axios";
-import extract from "extract-zip";
+import axios from 'axios';
+import extract from 'extract-zip';
 
 const isDiy = true; // 是否使用定制的 electron 版本
 const root = process.cwd();
 
-const urlLocal = join(root, './.electron/13.1.4-ccc/')
-const urlLocalZip = join(root, './.electron/13.1.4-ccc.zip')
+const urlLocal = join(root, './.electron/13.1.4-ccc/');
+const urlLocalZip = join(root, './.electron/13.1.4-ccc.zip');
 const urlDownload = 'http://ftp.cocos.org/TestBuilds/Fireball/Electron/13.1.4/electron-v13.1.4-360-newkey-darwin.zip';
 
 const publishPath = join(root, './out');
@@ -60,7 +60,7 @@ async function electronUnzip() {
         try {
             await extract(urlLocalZip, {
                 dir: urlLocal,
-            } )
+            });
             resolve();
         } catch (error) {
             reject(error);
@@ -69,19 +69,19 @@ async function electronUnzip() {
 }
 
 async function prepareElectron() {
-    if(!existsSync(join(urlLocal, 'Electron.app'))) {
-        if(!existsSync(urlLocalZip)) {
+    if (!existsSync(join(urlLocal, 'Electron.app'))) {
+        if (!existsSync(urlLocalZip)) {
             await electronDownload();
         }
         await electronUnzip();
-    } 
+    }
 }
 
 async function initSource() {
-     // 复制文件
-     await copy(sourceElectronPath, electronPath);
-     await copy(sourceAppPath, appPath);
-     await copy(sourceCocosPath, cocosPath);
+    // 复制文件
+    await copy(sourceElectronPath, electronPath);
+    await copy(sourceAppPath, appPath);
+    await copy(sourceCocosPath, cocosPath);
 }
 
 async function removeSouce() {
@@ -90,20 +90,21 @@ async function removeSouce() {
 }
 
 async function encryptFile() {
-    const encryptKey = process.env['Creator3D_encryptKey_0623']  || '1234567890';
+    const encryptKey = process.env['Creator3D_encryptKey_0623'] || '1234567890';
     function canSkipEncrypt(file) {
-        const result =  basename(file) === 'require.js' 
-        || extname(file) !== '.js'
-        || basename(file) === 'index.js' 
-        || /(static|i18n|node_modules)/.test(file)
-        || /(min.js$)/.test(file)
-        || !existsSync(file)
-        return result
+        const result =
+            basename(file) === 'require.js' ||
+            extname(file) !== '.js' ||
+            basename(file) === 'index.js' ||
+            /(static|i18n|node_modules)/.test(file) ||
+            /(min.js$)/.test(file) ||
+            !existsSync(file);
+        return result;
     }
 
     function encryptExec(file) {
-        if(canSkipEncrypt(file)) {
-            return
+        if (canSkipEncrypt(file)) {
+            return;
         }
 
         try {
@@ -116,16 +117,9 @@ async function encryptFile() {
         }
     }
 
-    recursiveDir(
-        appPath, 
-        encryptExec,
-    );
+    recursiveDir(appPath, encryptExec);
 
-    recursiveDir(
-        cocosPath, 
-        encryptExec,
-    );
-
+    recursiveDir(cocosPath, encryptExec);
 }
 
 async function createAsar() {
@@ -138,47 +132,47 @@ async function createAsar() {
 }
 
 async function updateIcns() {
-     // 修改图标
-     const logoPath = join(root, './scripts/pack/logo.icns');
-     const icoPath = join(electronPath, './Contents/Resources/electron.icns');
-     await copy(logoPath,icoPath, { overwrite: true });
+    // 修改图标
+    const logoPath = join(root, './scripts/pack/logo.icns');
+    const icoPath = join(electronPath, './Contents/Resources/electron.icns');
+    await copy(logoPath, icoPath, { overwrite: true });
 }
 
 async function createDMG() {
     await remove(dmgPath);
 
     const instance = appdmg({
-        source: join(root, './scripts/pack/release.json'), 
+        source: join(root, './scripts/pack/release.json'),
         target: dmgPath,
     });
     const bar = new ProgressBar('[:bar] :percent :tokenTip', {
-        total: instance.totalSteps, 
+        total: instance.totalSteps,
         width: 40,
         token1: '打包中...',
     });
     instance.on('progress', (info) => {
         const val = info.current / info.total;
-      
-        if(val < 1) {
+
+        if (val < 1) {
             bar.tick(info.current / info.total, {
                 tokenTip: 'DMG 打包中...',
             });
         } else {
             bar.tick(1, {
                 tokenTip: 'DMG 打包完成!',
-            })
+            });
         }
     });
     instance.on('finish', () => {
         // console.log('dmg 打包完成!');
     });
-    instance.on('error', error => console.error(error));
+    instance.on('error', (error) => console.error(error));
 }
 
 async function start() {
     await dirInit();
     await prepareElectron();
-    
+
     await initSource();
     // await encryptFile();
     await createAsar();
@@ -188,13 +182,3 @@ async function start() {
 }
 
 start();
-
-
-
-
-
-
-
-
-
-
