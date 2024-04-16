@@ -16,17 +16,21 @@ jobs:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v2
 
-            - name: Setup Node.js environment
-              uses: actions/setup-node@v2.3.0
-              with:
-                  node-version: 20
+            # - name: Setup Node.js environment
+            #   uses: actions/setup-node@v2.3.0
+            #   with:
+            #       node-version: 18.17.0
 
-            - uses: actions/cache@v2
-              with:
-                  path: ~/.npm
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-node-
+            # - uses: actions/cache@v2
+            #   with:
+            #       path: ~/.npm
+            #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            #       restore-keys: |
+            #           ${{ runner.os }}-node-
+
+            - name: 切换 node 版本
+              if: contains(github.event.head_commit.message, 'pack')
+              run: nvm use
 
             - name: 安装依赖
               if: contains(github.event.head_commit.message, 'pack')
