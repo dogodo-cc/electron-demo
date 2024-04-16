@@ -1,9 +1,9 @@
-import { readdir, stat } from 'fs:promises';
+import { readdir, stat } from 'node:fs';
 import { join, extname, normalize, basename } from 'node:path';
 import { spawn } from 'node:child_process';
 
 // 递归一个文件夹
-async function recursiveDir(
+export async function recursiveDir(
     folderPath,
     callback,
     options = {

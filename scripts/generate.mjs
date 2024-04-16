@@ -1,10 +1,10 @@
-import { join, basename, extname } from 'path';
+import { join, basename, extname } from 'node:path';
 import { ensureDir, emptydir, copy, remove } from 'fs-extra';
-import { existsSync, readFileSync, writeFileSync, createWriteStream } from 'fs';
+import { existsSync, readFileSync, writeFileSync, createWriteStream } from 'node:fs';
 import { createPackage } from '@electron/asar';
 import appdmg from 'appdmg';
 import ProgressBar from 'progress';
-// import { recursiveDir, spawnAsync } from './utils.mjs';
+import { recursiveDir, spawnAsync } from './utils.mjs';
 import xxtea from 'xxtea-node';
 import axios from 'axios';
 import extract from 'extract-zip';
