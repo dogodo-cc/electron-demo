@@ -11,7 +11,7 @@ on:
 
 jobs:
     build:
-        runs-on: self-hosted
+        runs-on: Mac-mini-M1
         steps:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v2
