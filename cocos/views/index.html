@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <!-- https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" /> -->
         <title>electron demo</title>
     </head>
     <body>
@@ -11,6 +11,69 @@
         <div id="app">
             <img src="src/assets/001.jpg" alt="" />
         </div>
-        <script type="module" src="src/main.ts"></script>
+        <form action="https://www.90s.co" enctype="multipart/form-data">
+            <fieldset>
+                <legend>请选择首选的联系方式：</legend>
+                <div>
+                    <input type="radio" id="contactChoice1" name="contact" value="email" />
+                    <label for="contactChoice1">电子邮件</label>
+
+                    <input type="radio" id="contactChoice2" name="contact" value="phone" />
+                    <label for="contactChoice2">电话</label>
+
+                    <input type="radio" id="contactChoice3" name="contact" value="mail" />
+                    <label for="contactChoice3">邮件</label>
+                </div>
+                <div>
+                    <button type="submit">提交</button>
+                </div>
+            </fieldset>
+        </form>
+        <fieldset>
+            <legend>请选择首选的联系方式：</legend>
+            <div>
+                <input type="radio" id="a1" name="test" value="email" />
+                <label for="a1">电子邮件</label>
+
+                <input type="radio" id="a2" name="test" value="phone" />
+                <label for="a2">电话</label>
+
+                <input type="radio" id="a3" name="test" value="mail" />
+                <label for="a3">邮件</label>
+            </div>
+            <div>
+                <button type="submit">提交</button>
+            </div>
+        </fieldset>
+        <!-- <script type="module" src="src/main.ts"></script> -->
+        <script type="module">
+            const $form = document.querySelector('form');
+            $form.addEventListener(
+                'submit',
+                (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const data = new FormData($form);
+                    console.log(data);
+                    console.log(e.target.action);
+                },
+                false
+            );
+            window.$form = $form;
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const radioButtonGroup = document.querySelectorAll('input[type="radio"][name="test"]');
+
+                radioButtonGroup.forEach(function (radioButton) {
+                    radioButton.addEventListener('change', function (event) {
+                        const selectedColor = event.target.value;
+                        console.log('Selected color:', selectedColor);
+
+                        // You can perform additional actions here based on the selected color.
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
