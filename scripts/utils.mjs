@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs';
+import { readdir, stat } from 'node:fs/promises';
 import { join, extname, normalize, basename } from 'node:path';
 import { spawn } from 'node:child_process';
 
