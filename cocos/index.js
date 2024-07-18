@@ -1,17 +1,19 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, BrowserView, BaseWindow, WebContentsView } = require('electron');
 const path = require('path');
 require('./menu.js');
 
+let main = null;
 const createWindow = () => {
-    // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 600,
+        width: 1000,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
+
+    main = mainWindow;
 
     // 加载 index.html
     if (app.isPackaged) {
@@ -69,4 +71,28 @@ ipcMain.on('show-context-menu', (event) => {
     ];
     const menu = Menu.buildFromTemplate(template);
     menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
+});
+
+app.on('before-quit', (e) => {
+    e.preventDefault();
+
+    const [parentX, parentY] = main.getPosition();
+    const [parentWidth, parentHeight] = main.getSize();
+
+    const childWidth = 600;
+    const childHeight = 623;
+
+    const childX = Math.ceil(parentX + parentWidth / 2 - childWidth / 2);
+    const childY = Math.ceil(parentY + parentHeight / 2 - childHeight / 2);
+
+    console.log(childX, childY);
+
+    const mainWindow = new BrowserWindow({
+        width: childWidth,
+        height: childHeight,
+        x: childX,
+        y: childY,
+    });
+    mainWindow.loadURL('https://www.90s.co');
+    mainWindow.setBounds({ x: childX, y: childY });
 });

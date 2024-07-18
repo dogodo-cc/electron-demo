@@ -1,5 +1,5 @@
 // preload.js
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, shell, contextBridge } = require('electron');
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
 // 它拥有与Chrome扩展一样的沙盒。
@@ -21,4 +21,8 @@ window.addEventListener('contextmenu', (e) => {
 
 ipcRenderer.on('context-menu-command', (e, command) => {
     console.log(e, command);
+});
+
+contextBridge.exposeInMainWorld('electronAPI', {
+    shell,
 });

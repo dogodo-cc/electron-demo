@@ -2,11 +2,12 @@
     <div>
         <HelloWorld msg="Vite + Vue" />
 
-        <input value="abc" type="date" @change="onchange" @input="oninput" />
+        <button @click="showItemInFolder">showItemInFolder</button>
 
         <div class="warp">
             <ui-list @change="change" :list.prop="list">
-                <ui-list-item v-for="(item, index) in list" :key="item.id" :index="index" show-prefix show-suffix draggable="true">
+                <ui-list-item v-for="(item, index) in list" :key="item.id" :index="index" show-prefix show-suffix
+                    draggable="true">
                     {{ item.name }} <button @click="clickHandle(item)">delte</button>
                 </ui-list-item>
             </ui-list>
@@ -69,11 +70,10 @@ function clickHandle(item: any) {
     console.log(item);
 }
 
-function onchange(e: Event) {
-    console.log('change:', e);
-}
-function oninput(e: Event) {
-    console.log('input:', e);
+function showItemInFolder() {
+    window.open('https://www.baidu.com')
+    window.open('file:///Applications/LayaAirIDE.app/Contents/Resources/app.asar/popup.html')
+    // window.electronAPI?.shell.showItemInFolder('/Users/alan/Documents/my-electron-app')
 }
 
 async function go() {
@@ -98,9 +98,11 @@ go();
     will-change: filter;
     transition: filter 300ms;
 }
+
 .logo:hover {
     filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
     filter: drop-shadow(0 0 2em #42b883aa);
 }
