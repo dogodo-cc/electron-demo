@@ -71,9 +71,7 @@ function clickHandle(item: any) {
 }
 
 function showItemInFolder() {
-    window.open('https://www.baidu.com')
-    window.open('file:///Applications/LayaAirIDE.app/Contents/Resources/app.asar/popup.html')
-    // window.electronAPI?.shell.showItemInFolder('/Users/alan/Documents/my-electron-app')
+    window.electronAPI?.shell.showItemInFolder('/Users/alan/Documents/my-electron-app')
 }
 
 async function go() {

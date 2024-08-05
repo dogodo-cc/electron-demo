@@ -9,7 +9,7 @@ import xxtea from 'xxtea-node';
 import axios from 'axios';
 import extract from 'extract-zip';
 
-const isDiy = true; // 是否使用定制的 electron 版本
+const isDiy = false; // 是否使用定制的 electron 版本
 const root = process.cwd();
 
 const urlLocal = join(root, './.electron/13.1.4-ccc/');

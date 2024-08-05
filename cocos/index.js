@@ -15,11 +15,14 @@ const createWindow = () => {
 
     main = mainWindow;
 
+    console.log('app.isPackaged', app.isPackaged);
+
     // 加载 index.html
     if (app.isPackaged) {
-        mainWindow.loadFile(path.join(__dirname, './dist/index.html'));
+        mainWindow.loadFile(path.join(__dirname, './views/dist/index.html'));
     } else {
-        mainWindow.loadURL('http://localhost:5555/');
+        mainWindow.loadFile(path.join(__dirname, './views/dist/index.html'));
+        // mainWindow.loadURL('http://localhost:5555/');
     }
 
     // 打开开发工具
@@ -74,8 +77,10 @@ ipcMain.on('show-context-menu', (event) => {
 });
 
 app.on('before-quit', (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+});
 
+function showAlert() {
     const [parentX, parentY] = main.getPosition();
     const [parentWidth, parentHeight] = main.getSize();
 
@@ -95,4 +100,4 @@ app.on('before-quit', (e) => {
     });
     mainWindow.loadURL('https://www.90s.co');
     mainWindow.setBounds({ x: childX, y: childY });
-});
+}

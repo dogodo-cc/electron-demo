@@ -14,4 +14,5 @@ export default defineConfig({
             external: ['electron'],
         },
     },
+    base: './', // 重要，否则在 electron 加载 index.html 的时候会找不到资源
 });

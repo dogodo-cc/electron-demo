@@ -25,7 +25,7 @@
         "@electron/asar": "^3.2.8",
         "@vitejs/plugin-vue2": "^2.3.1",
         "appdmg": "^0.6.6",
-        "electron": "31.2.1",
+        "electron": "13.1.4",
         "fs-extra": "^11.2.0",
         "progress": "^2.0.3",
         "typescript": "^5.4.2",
