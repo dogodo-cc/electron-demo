@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "target": "ESNext",
+        "lib": ["ES2023"],
+        "module": "NodeNext",
+        "skipLibCheck": true,
+
+        /* Bundler mode */
+        "moduleResolution": "NodeNext",
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "noEmit": false,
+        "sourceMap": true,
+
+        /* 校验 */
+        "strict": true,
+        "noUnusedLocals": false, // 局部变量
+        "noUnusedParameters": false, // 函数参数
+        "noFallthroughCasesInSwitch": true
+    },
+    "include": ["./src"]
+}

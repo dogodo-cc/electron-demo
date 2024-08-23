@@ -139,6 +139,7 @@ async function start() {
     await removeSouce();
     await updateIcns();
     // await createDMG();
+    console.log('make success');
 }
 
 start();

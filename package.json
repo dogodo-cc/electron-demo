@@ -1,10 +1,12 @@
 {
     "name": "my-electron-app",
     "type": "module",
-    "main": "app/index.js",
+    "main": "app/dist/index.js",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "make": "node ./scripts/make.mjs",
+        "make": "pnpm run web:build && pnpm run app:build && node ./scripts/make.mjs",
+        "app:dev": "cd ./app && tsc --watch",
+        "app:build": "cd ./app && tsc",
         "web:dev": "vite --port 5555",
         "web:build": "vue-tsc -b && vite build",
         "web:preview": "vite preview"

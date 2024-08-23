@@ -3,11 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <!-- https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
         <title>electron demo</title>
     </head>
     <body>
-        <span>我们正在使用 Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, 和 Electron <span id="electron-version"></span>.</span>
         <div id="app"></div>
         <script type="module" src="src/main.ts"></script>
     </body>

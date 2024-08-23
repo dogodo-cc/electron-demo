@@ -7,6 +7,10 @@ export default defineConfig({
     build: {
         outDir: '../app/node_modules/.views',
         emptyOutDir: true,
+        rollupOptions: {
+            external: ['electron'],
+        },
     },
     plugins: [vue()],
+    base: './',
 });
