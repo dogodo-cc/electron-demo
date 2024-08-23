@@ -1,44 +1,25 @@
 {
     "name": "my-electron-app",
-    "version": "1.0.0",
-    "description": "demo",
     "type": "module",
     "main": "app/index.js",
     "scripts": {
-        "generate": "node ./scripts/generate.mjs",
-        "postinstall": "node ./scripts/postinstall.js",
-        "start": "electron-forge start",
-        "package": "electron-forge package",
-        "make": "electron-forge make",
-        "dev:web": "vite",
-        "build:web": "vite build"
+        "preinstall": "npx only-allow pnpm",
+        "make": "node ./scripts/make.mjs",
+        "web:dev": "vite --port 5555",
+        "web:build": "vue-tsc -b && vite build",
+        "web:preview": "vite preview"
     },
-    "author": "alan",
-    "license": "ISC",
+    "packageManager": "pnpm@9.0.0",
     "devDependencies": {
-        "@electron-forge/cli": "^7.2.0",
-        "@electron-forge/maker-deb": "^7.2.0",
-        "@electron-forge/maker-rpm": "^7.2.0",
-        "@electron-forge/maker-squirrel": "^7.2.0",
-        "@electron-forge/maker-zip": "^7.2.0",
-        "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
         "@electron/asar": "^3.2.8",
-        "@vitejs/plugin-vue2": "^2.3.1",
-        "appdmg": "^0.6.6",
-        "electron": "13.1.4",
+        "@vitejs/plugin-vue": "^5.1.2",
+        "axios": "^1.7.4",
+        "electron": "32.0.1",
+        "extract-zip": "^2.0.1",
         "fs-extra": "^11.2.0",
         "progress": "^2.0.3",
-        "typescript": "^5.4.2",
-        "vite": "^5.0.12",
-        "vue-tsc": "^1.8.27",
-        "xxtea-node": "^1.1.5"
-    },
-    "dependencies": {
-        "axios": "^1.6.5",
-        "electron-squirrel-startup": "^1.0.0",
-        "extract-zip": "^2.0.1",
-        "lit": "^3.1.2",
-        "lodash": "^4.17.21",
-        "vue": "^2.7.16"
+        "typescript": "^5.5.4",
+        "vite": "^5.4.2",
+        "vue-tsc": "^2.0.29"
     }
 }

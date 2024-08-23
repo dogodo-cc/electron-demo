@@ -1,11 +1,11 @@
 {
-    // 使用 IntelliSense 了解相关属性。 
+    // 使用 IntelliSense 了解相关属性。
     // 悬停以查看现有属性的描述。
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug App",
+            "name": "本地调试",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceRoot}",
@@ -13,22 +13,7 @@
             "windows": {
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
-            "args": [
-                "./app"
-            ],
-        },
-        {
-            "name": "Debug Cocos",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-            "windows": {
-                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-            },
-            "args": [
-                "./cocos",
-            ],
+            "args": ["./"]
         }
     ]
 }

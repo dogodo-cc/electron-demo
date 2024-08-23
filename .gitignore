@@ -1,8 +1,13 @@
 
-/.electron
 node_modules
 dist
 .DS_Store
 
 
 out/
+.electron/
+
+
+# 只用 pnpm 安装依赖
+package-lock.json
+yarn.lock

@@ -1,18 +1,12 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue2';
+import vue from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue()],
-    root: './cocos/views',
-    server: {
-        port: 5555,
-    },
+    root: './app-views',
     build: {
-        minify: false,
-        rollupOptions: {
-            external: ['electron'],
-        },
+        outDir: '../app/node_modules/.views',
+        emptyOutDir: true,
     },
-    base: './', // 重要，否则在 electron 加载 index.html 的时候会找不到资源
+    plugins: [vue()],
 });
