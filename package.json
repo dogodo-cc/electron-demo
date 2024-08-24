@@ -1,7 +1,6 @@
 {
     "name": "my-electron-app",
     "type": "module",
-    "main": "app/dist/index.js",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "make": "pnpm run web:build && pnpm run app:build && node ./scripts/make.mjs",

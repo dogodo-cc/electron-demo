@@ -6,6 +6,8 @@ import './menu/index.js';
 import './window-center.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+console.log(123);
+
 let main: BrowserWindow | null = null;
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
