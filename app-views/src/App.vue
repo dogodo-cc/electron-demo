@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import HelloWorld from './components/HelloWorld.vue'
+import Download from './components/download.vue'
 
 const isPackaged = ref<boolean>(false);
 
@@ -34,7 +35,8 @@ onMounted(async () => {
   </div>
   <HelloWorld msg="Vite + Vue3" />
   是否打包：{{ isPackaged }}
-  <button @click="openChildWin">打开居中的子窗口</button>
+  <a-button type="primary" @click="openChildWin">打开居中的子窗口</a-button>
+  <Download />
 </template>
 
 <style scoped>

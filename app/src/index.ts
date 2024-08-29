@@ -1,12 +1,11 @@
-import { app, BrowserWindow, ipcMain, Menu, BrowserView, BaseWindow, WebContentsView } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { join, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
+import './download/index.js';
 
 import './menu/index.js';
 import './window-center.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-console.log(123);
 
 let main: BrowserWindow | null = null;
 const createWindow = () => {

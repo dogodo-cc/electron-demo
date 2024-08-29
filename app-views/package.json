@@ -1,6 +1,7 @@
 {
     "type": "module",
     "dependencies": {
+        "ant-design-vue": "^4.2.3",
         "lit": "^3.2.0",
         "lodash": "^4.17.21",
         "vue": "^3.4.38"
