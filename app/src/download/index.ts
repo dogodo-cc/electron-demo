@@ -16,7 +16,7 @@ ipcMain.on('download-create', async (_, url) => {
         list.push(_item);
 
         downloadItem.on('download:start', (item: IDownloadItem) => {
-            console.log('开始下载：', item);
+            console.log('开始下载：', item.url);
             Object.assign(_item, item);
             broadcast('download-update', list);
         });
@@ -28,7 +28,7 @@ ipcMain.on('download-create', async (_, url) => {
         });
 
         downloadItem.on('download:end', (item: IDownloadItem, success: boolean, error?: Error) => {
-            console.log('结束下载：', item, success, error);
+            console.log('结束下载：', item.url, success, error);
             Object.assign(_item, item);
             broadcast('download-update', list);
         });
