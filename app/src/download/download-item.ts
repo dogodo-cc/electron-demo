@@ -52,6 +52,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
     isPause?: boolean;
     isWait?: boolean;
     isLoading?: boolean;
+    bytesPerSecond?: number;
 
     private abort?: () => void; // 缓存取消函数，用于暂停和取消等
     private chunkSize = 1 * 1024 * 1024;
@@ -98,6 +99,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
         this.isPause = false;
         this.isWait = false;
         this.isLoading = true;
+        this.bytesPerSecond = 0;
 
         ensureDir(this.downloadPath); // 每次下载都确保一下路径是存在的，避免创建文件的错误
         this.emit('download:start', this.pickItem());
@@ -129,6 +131,8 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                 controller.abort();
             };
 
+            const startTime = Date.now();
+
             await axios({
                 url: this.url,
                 method: 'GET',
@@ -148,6 +152,8 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                 })
                 .then(() => {
                     this.percent = currentChunkEnd / (this.contentLength - 1);
+                    const endTime = Date.now();
+                    this.bytesPerSecond = ((currentChunkEnd - downloadedSize) / (endTime - startTime)) * 1000;
                     this.emit('download:progress', this.pickItem());
                     this.download(currentChunkEnd + 1); // 因为 header:Range 那边是两边闭合，所以下一个起点需要 +1
                 })
@@ -167,12 +173,13 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
         this.isWait = false;
         this.isLoading = false;
         this.isPause = true;
+        this.bytesPerSecond = 0;
         this.emit('download:end', this.pickItem(), success, error);
     }
 
     // 用于传递数据的 item，需要剥离一些不可序列化的数据
     pickItem(): IDownloadItem {
-        const { url, file, contentLength, percent, isPause, isWait, isLoading } = this;
+        const { url, file, contentLength, percent, isPause, isWait, isLoading, bytesPerSecond } = this;
         return {
             url,
             file,
@@ -181,6 +188,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
             isPause,
             isWait,
             isLoading,
+            bytesPerSecond,
         };
     }
 

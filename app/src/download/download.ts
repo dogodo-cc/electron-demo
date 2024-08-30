@@ -89,4 +89,16 @@ export class DownloadManger {
             this.createTask(nextItem.url);
         }
     }
+
+    async clearTasks(removeFile = false) {
+        const allTaskItems = Object.values(this.downloadItemMap);
+        for (const v of allTaskItems) {
+            v.downloadPause();
+            v.removeAllListeners();
+            if (removeFile) {
+                await remove(v.file);
+            }
+            delete this.downloadItemMap[v.url];
+        }
+    }
 }

@@ -2,6 +2,7 @@
     <div class="download-demo">
         <div class="task" v-for="task in taskList" :key="task.url">
             <a-progress :percent="Math.ceil(task.percent * 100)"></a-progress>
+            <a-tag color="purple">{{ bytesToSize(task.bytesPerSecond) }}</a-tag>
             <a-button :type="task.isPause ? 'primary' : 'default'" @click="downloadTogglePause(task)">
                 {{ task.percent === 1 ? '完成' : (task.isPause ? '继续' : '暂停') }}</a-button>
         </div>
@@ -14,6 +15,13 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+
+function bytesToSize(bytes: number): string {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0';
+    let i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i];
+}
 
 
 const url = 'https://www.90s.co/videos/hello.zip';
@@ -48,6 +56,7 @@ window.ipc.on('download-progress', (_, item: IDownloadItem) => {
     const task = taskList.value.find(v => v.url === item.url);
     if (task) {
         task.percent = item.percent;
+        task.bytesPerSecond = item.bytesPerSecond ?? 0;
     }
 })
 </script>
