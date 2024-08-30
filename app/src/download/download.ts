@@ -33,7 +33,7 @@ export class DownloadManger {
 
     // 创建下载任务
     public async createTask(url: string): Promise<Omit<DownloadItem, 'downloadStart' | 'downloadPause'>> {
-        // 'downloadStart' | 'downloadPause' 只允许在管理器内使用，所以需要剔除对外暴露的接口
+        // 'downloadStart' | 'downloadPause' 只允许在管理器内使用，不能对外暴露
 
         let item = this.downloadItemMap[url];
         if (!item) {

@@ -23,20 +23,20 @@ class DownloadItemEmitter {
         this._emit = new EventEmitter();
     }
 
-    emit(event: IAllowEvents, ...args: Parameters<EventArgsMap[IAllowEvents]>) {
+    emit<T extends IAllowEvents>(event: T, ...args: Parameters<EventArgsMap[T]>) {
         return this._emit.emit(event, ...args);
     }
 
-    on(event: IAllowEvents, fn: EventArgsMap[IAllowEvents]) {
-        return this._emit.on(event, fn);
+    on<T extends IAllowEvents>(event: T, listener: EventArgsMap[T]) {
+        return this._emit.on(event, listener);
     }
 
-    once(event: IAllowEvents, fn: EventArgsMap[IAllowEvents]) {
-        return this._emit.once(event, fn);
+    once<T extends IAllowEvents>(event: T, listener: EventArgsMap[T]) {
+        return this._emit.once(event, listener);
     }
 
-    off(event: IAllowEvents, fn: EventArgsMap[IAllowEvents]) {
-        return this._emit.off(event, fn);
+    off<T extends IAllowEvents>(event: T, listener: EventArgsMap[T]) {
+        return this._emit.off(event, listener);
     }
 
     removeAllListeners() {
