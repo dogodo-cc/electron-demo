@@ -31,6 +31,10 @@ ipcMain.on('download-create', async (_, url) => {
             console.log('结束下载：', item.url, success, error);
             Object.assign(_item, item);
             broadcast('download-update', list);
+
+            if (success) {
+                downloadItem.removeAllListeners();
+            }
         });
     }
 
