@@ -17,6 +17,10 @@
 import { ref } from 'vue';
 
 function bytesToSize(bytes: number): string {
+    if (typeof bytes !== 'number') {
+        bytes = 0;
+    }
+
     const units = ['B', 'KB', 'MB', 'GB', 'TB'];
     if (bytes === 0) return '0';
     let i = Math.floor(Math.log(bytes) / Math.log(1024));
@@ -64,6 +68,8 @@ window.ipc.on('download-progress', (_, item: IDownloadItem) => {
 <style>
 .download-demo {
     margin-top: 30px;
+    width: 50%;
+    text-align: center;
 
     & .task {
         display: flex;

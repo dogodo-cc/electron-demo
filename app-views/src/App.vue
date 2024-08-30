@@ -1,57 +1,41 @@
-<script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import HelloWorld from './components/HelloWorld.vue'
-import Download from './components/download.vue'
-
-const isPackaged = ref<boolean>(false);
-
-
-function openChildWin() {
-  window.ipc.send('open-child-win')
-}
-
-onMounted(async () => {
-  window.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    window.ipc.send('show-context-menu');
-  });
-
-  window.ipc.on('context-menu-command', (e, command) => {
-    console.log(e, command);
-  });
-
-  isPackaged.value = await window.ipc.invoke('app-is-packaged')
-})
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="layout-nav">
+    <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+      <a-menu-item v-for="item in routes" :key="item.name">
+        <RouterLink :to="item.path">
+          <span class="nav-text">{{ item.name }}</span>
+        </RouterLink>
+      </a-menu-item>
+    </a-menu>
   </div>
-  <HelloWorld msg="Vite + Vue3" />
-  是否打包：{{ isPackaged }}
-  <a-button type="primary" @click="openChildWin">打开居中的子窗口</a-button>
-  <Download />
+  <div class="layout-content">
+    <RouterView />
+  </div>
 </template>
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { routes } from './route'
 
+const selectedKeys = ref<string[]>([]);
+</script>
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.layout-nav {
+  position: fixed;
+  width: 200px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+
+  & .ant-menu {
+    height: 100%;
+  }
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.layout-content {
+  margin-left: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 </style>

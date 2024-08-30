@@ -1,9 +1,11 @@
 {
     "type": "module",
     "dependencies": {
+        "@ant-design/icons-vue": "^7.0.1",
         "ant-design-vue": "^4.2.3",
         "lit": "^3.2.0",
         "lodash": "^4.17.21",
-        "vue": "^3.4.38"
+        "vue": "^3.4.38",
+        "vue-router": "4"
     }
 }
