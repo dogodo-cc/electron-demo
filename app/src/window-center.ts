@@ -1,4 +1,7 @@
 import { BrowserWindow, ipcMain } from 'electron';
+import { resolve, join } from 'node:path';
+import { getDirname } from './utils.js';
+const __dirname = getDirname(import.meta.url);
 
 function openChildWin(main: BrowserWindow) {
     const [parentX, parentY] = main.getPosition();
@@ -15,8 +18,14 @@ function openChildWin(main: BrowserWindow) {
         height: childHeight,
         x: childX,
         y: childY,
+        webPreferences: {
+            preload: join(__dirname, '../preload.cjs'), // 只能是 cjs
+            sandbox: true,
+            webSecurity: true,
+        },
     });
-    childWindow.loadURL('https://www.90s.co');
+    // childWindow.loadURL('https://www.90s.co');
+    childWindow.loadFile(resolve(__dirname, '../node_modules/.views/index.html'));
     childWindow.setBounds({ x: childX, y: childY });
 }
 
@@ -25,4 +34,8 @@ ipcMain.on('open-child-win', (e) => {
     if (main) {
         openChildWin(main);
     }
+});
+
+ipcMain.handle('get-window-url', () => {
+    return resolve(__dirname, '../node_modules/.views/index.html');
 });

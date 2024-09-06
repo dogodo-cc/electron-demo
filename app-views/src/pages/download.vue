@@ -10,6 +10,10 @@
         <div class="btns">
             <a-button :key="link" v-for="(link, i) in links" @click="download(link)">下载{{ i + 1 }}</a-button>
         </div>
+
+        <div>
+            <a-button @click="downloadAndReadHash">下载编辑器列表写入 hash</a-button>
+        </div>
     </div>
 </template>
 
@@ -54,6 +58,7 @@ function downloadTogglePause(item: IDownloadItem) {
 
 window.ipc.on('download-update', (_, list: IDownloadItem[]) => {
     taskList.value = list;
+    console.log(list)
 })
 
 window.ipc.on('download-progress', (_, item: IDownloadItem) => {
@@ -63,6 +68,10 @@ window.ipc.on('download-progress', (_, item: IDownloadItem) => {
         task.bytesPerSecond = item.bytesPerSecond ?? 0;
     }
 })
+
+function downloadAndReadHash() {
+    window.ipc.send('start-write-hash');
+}
 </script>
 
 <style>

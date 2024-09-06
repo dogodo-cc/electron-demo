@@ -3,7 +3,10 @@
 
 import { tmpdir } from 'node:os';
 import { remove } from 'fs-extra';
+import { join, basename, dirname } from 'node:path';
 import { DownloadItem } from './download-item.js';
+import { createHash } from 'node:crypto';
+import type { IDownloadItem } from './type.js';
 
 export class DownloadManger {
     constructor(downloadPath?: string) {
@@ -32,14 +35,15 @@ export class DownloadManger {
     }
 
     // 创建下载任务
-    public async createTask(url: string): Promise<Omit<DownloadItem, 'downloadStart' | 'downloadPause'>> {
+    public async createTask(url: string, file?: string): Promise<Omit<DownloadItem, 'downloadStart' | 'downloadPause'>> {
         // 'downloadStart' | 'downloadPause' 只允许在管理器内使用，不能对外暴露
 
         let item = this.downloadItemMap[url];
         if (!item) {
-            item = new DownloadItem(url, this.downloadPath);
+            item = new DownloadItem(url, file ?? this.getSavePath(url));
             this.downloadItemMap[url] = item;
         }
+        item.isWait = this.isOverLimit;
 
         // 需要先 return 这样外面才能及时的监听事件
         process.nextTick(() => {
@@ -57,13 +61,13 @@ export class DownloadManger {
     }
 
     // 删除下载任务
-    public async deleteTask(url: string) {
+    public async deleteTask(url: string, removeFile = false) {
         const item = this.downloadItemMap[url];
         if (item) {
             item.downloadPause();
             item.removeAllListeners();
             delete this.downloadItemMap[url];
-            await remove(item.file);
+            removeFile && (await remove(item.file));
         }
     }
 
@@ -77,12 +81,19 @@ export class DownloadManger {
             console.log('排队等待');
         } else {
             item.downloadStart();
-            item.once('download:end', this.downloadEnd.bind(this));
+            item.once('download:end', (item) => {
+                this.downloadEnd(item);
+            });
         }
     }
 
     // 结束下载
-    private async downloadEnd() {
+    private async downloadEnd(item: IDownloadItem) {
+        process.nextTick(() => {
+            // 让其他监听的事件先执行完毕，再销毁这个下载实例
+            this.deleteTask(item.url);
+        });
+
         // 如果有排队等待的则进行新的下载
         if (this.downloadWaitTasks.length > 0) {
             const nextItem = this.downloadWaitTasks[0];
@@ -92,13 +103,13 @@ export class DownloadManger {
 
     async clearTasks(removeFile = false) {
         const allTaskItems = Object.values(this.downloadItemMap);
-        for (const v of allTaskItems) {
-            v.downloadPause();
-            v.removeAllListeners();
-            if (removeFile) {
-                await remove(v.file);
-            }
-            delete this.downloadItemMap[v.url];
-        }
+        allTaskItems.forEach((item) => {
+            this.deleteTask(item.url, removeFile);
+        });
+    }
+
+    private getSavePath(url: string) {
+        const uuid = createHash('md5').update(url).digest('hex'); // 通过 url 生成唯一的文件名
+        return join(this.downloadPath, uuid + '_' + basename(url));
     }
 }

@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { join, dirname } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import './download/index.js';
+import './download/hash-list.js';
 
 import './menu/index.js';
 import './window-center.js';
@@ -17,6 +18,18 @@ const createWindow = () => {
             sandbox: true,
             webSecurity: true,
         },
+    });
+
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        console.log('渲染进程在打开这个地址:', url);
+        return {
+            action: 'allow',
+            overrideBrowserWindowOptions: {
+                webPreferences: {
+                    preload: join(__dirname, '../preload.cjs'),
+                },
+            },
+        };
     });
 
     main = mainWindow;

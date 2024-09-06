@@ -12,35 +12,37 @@ ipcMain.on('download-create', async (_, url) => {
     const downloadItem = await downloadManger.createTask(url);
 
     const _item = downloadItem.pickItem();
-    if (list.every((v) => v.url !== _item.url)) {
-        list.push(_item);
-
-        downloadItem.on('download:start', (item: IDownloadItem) => {
-            console.log('开始下载：', item.url);
-            Object.assign(_item, item);
-            broadcast('download-update', list);
-        });
-
-        downloadItem.on('download:progress', (item: IDownloadItem) => {
-            // console.log('正在下载：', item.percent);
-            Object.assign(_item, item);
-            broadcast('download-progress', item);
-        });
-
-        downloadItem.on('download:end', (item: IDownloadItem, success: boolean, error?: Error) => {
-            console.log('结束下载：', item.url, success, error);
-            Object.assign(_item, item);
-            broadcast('download-update', list);
-
-            if (success) {
-                downloadItem.removeAllListeners();
-            }
-        });
-    }
-
+    mergeItemToList(_item);
     broadcast('download-update', list);
+
+    downloadItem.on('download:start', (item: IDownloadItem) => {
+        mergeItemToList(item);
+        broadcast('download-update', list);
+        console.log('开始下载：', item.url, list);
+    });
+
+    downloadItem.on('download:progress', (item: IDownloadItem) => {
+        // console.log('正在下载：', item.percent);
+        mergeItemToList(item);
+        broadcast('download-progress', item);
+    });
+
+    downloadItem.on('download:end', (item: IDownloadItem, success: boolean, error?: Error) => {
+        mergeItemToList(item);
+        broadcast('download-update', list);
+        console.log('结束下载：', item.url, success, error, list);
+    });
 });
 
 ipcMain.on('download-pause', (_, url) => {
     downloadManger.pauseTask(url);
 });
+
+function mergeItemToList(item: IDownloadItem) {
+    const cacheItem = list.find((v) => v.url === item.url);
+    if (cacheItem) {
+        Object.assign(cacheItem, item);
+    } else {
+        list.push(item);
+    }
+}

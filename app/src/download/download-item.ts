@@ -1,9 +1,9 @@
 import { EventEmitter } from 'node:events';
-import { join, basename, dirname } from 'node:path';
+import { dirname } from 'node:path';
 import { existsSync, createWriteStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
-import { createHash } from 'node:crypto';
+
 import { ensureDir, remove } from 'fs-extra';
 import axios from 'axios';
 import type { IDownloadItem } from './type.js';
@@ -11,6 +11,7 @@ import type { IDownloadItem } from './type.js';
 type EventArgsMap = {
     'download:start': (item: IDownloadItem) => void;
     'download:progress': (item: IDownloadItem) => void;
+    'download:cancel': (item: IDownloadItem) => void;
     'download:end': (item: IDownloadItem, success: boolean, error?: Error) => void;
 };
 
@@ -54,19 +55,19 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
     isLoading?: boolean;
     bytesPerSecond?: number;
 
+    retry: { [k: number]: number } = { 0: 0 };
+    retryMax = 3;
+
     private abort?: () => void; // 缓存取消函数，用于暂停和取消等
     private chunkSize = 1 * 1024 * 1024;
-    private downloadPath: string;
 
-    constructor(url: string, downloadPath: string, chunkSize = 1 * 1024 * 1024) {
+    constructor(url: string, file: string, chunkSize = 1 * 1024 * 1024) {
         super();
         this.url = url;
         this.contentLength = 0;
         this.percent = 0;
-
+        this.file = file;
         this.chunkSize = chunkSize;
-        this.downloadPath = downloadPath;
-        this.file = this.getSavePath(url);
     }
 
     // 开始下载
@@ -74,7 +75,9 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
         // 每次下载都请求一次 contentLength 方便和本地数据做对比
         const contentLength = await this.getContentLength(this.url);
         if (!contentLength) {
-            throw new Error(`${this.url} content-length is invilod: ${contentLength}`);
+            console.log(`${this.url} content-length is invilod: ${contentLength}`);
+            this.downloadEnd(false);
+            return;
         }
 
         // 断点下载
@@ -101,7 +104,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
         this.isLoading = true;
         this.bytesPerSecond = 0;
 
-        ensureDir(this.downloadPath); // 每次下载都确保一下路径是存在的，避免创建文件的错误
+        ensureDir(dirname(this.file)); // 每次下载都确保一下路径是存在的，避免创建文件的错误
         this.emit('download:start', this.pickItem());
         this.download(size);
     }
@@ -116,6 +119,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
     // 执行下载
     private async download(downloadedSize = 0) {
         if (this.isPause) {
+            this.emit('download:cancel', this.pickItem()); // 为了适配原有的取消钩子
             this.downloadEnd(downloadedSize === this.contentLength - 1);
             return;
         }
@@ -133,7 +137,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
 
             const startTime = Date.now();
 
-            await axios({
+            axios({
                 url: this.url,
                 method: 'GET',
                 responseType: 'stream',
@@ -158,7 +162,17 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                     this.download(currentChunkEnd + 1); // 因为 header:Range 那边是两边闭合，所以下一个起点需要 +1
                 })
                 .catch((e) => {
-                    this.downloadEnd(false, e);
+                    // 错误了重试 3 次
+                    if (!this.retry[downloadedSize]) {
+                        this.retry[downloadedSize] = 0;
+                    }
+                    if (this.retry[downloadedSize] < this.retryMax) {
+                        this.retry[downloadedSize] += 1;
+                        console.log('retry', downloadedSize, this.retry[downloadedSize]);
+                        this.download(downloadedSize);
+                    } else {
+                        this.downloadEnd(false, e);
+                    }
                 })
                 .finally(() => {
                     // 做些清理工作，避免内存泄露
@@ -191,12 +205,6 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
             bytesPerSecond,
         };
     }
-
-    private getSavePath(url: string) {
-        const uuid = createHash('md5').update(url).digest('hex'); // 通过 url 生成唯一的文件名
-        return join(this.downloadPath, uuid + '_' + basename(url));
-    }
-
     private getContentLength(url: string): Promise<number> {
         return new Promise((resolve) => {
             axios
