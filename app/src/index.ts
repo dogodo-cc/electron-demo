@@ -7,12 +7,13 @@ import './download/hash-list.js';
 import './menu/index.js';
 import './window-center.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
+import './devtool.cjs';
 
 let main: BrowserWindow | null = null;
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 600,
+        width: 12000,
+        height: 900,
         webPreferences: {
             preload: join(__dirname, '../preload.cjs'), // 只能是 cjs
             sandbox: true,

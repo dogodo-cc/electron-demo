@@ -2,7 +2,7 @@
     <div class="download-demo">
         <div class="task" v-for="task in taskList" :key="task.url">
             <a-progress :percent="Math.ceil(task.percent * 100)"></a-progress>
-            <a-tag color="purple">{{ bytesToSize(task.bytesPerSecond) }}</a-tag>
+            <a-tag color="purple">{{ bytesToSize(task.bytesPerSecond ?? 0) }}</a-tag>
             <a-button :type="task.isPause ? 'primary' : 'default'" @click="downloadTogglePause(task)">
                 {{ task.percent === 1 ? '完成' : (task.isPause ? '继续' : '暂停') }}</a-button>
         </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onUnmounted } from 'vue';
 
 function bytesToSize(bytes: number): string {
     if (typeof bytes !== 'number') {
@@ -55,18 +55,24 @@ function downloadTogglePause(item: IDownloadItem) {
     }
 }
 
-
-window.ipc.on('download-update', (_, list: IDownloadItem[]) => {
+function onDownloadUpdate(_: any, list: IDownloadItem[]) {
     taskList.value = list;
-    console.log(list)
-})
+}
 
-window.ipc.on('download-progress', (_, item: IDownloadItem) => {
+function onDownloadProgress(_, item: IDownloadItem) {
     const task = taskList.value.find(v => v.url === item.url);
     if (task) {
         task.percent = item.percent;
         task.bytesPerSecond = item.bytesPerSecond ?? 0;
     }
+}
+
+window.ipc.on('download-update', onDownloadUpdate);
+window.ipc.on('download-progress', onDownloadProgress)
+
+onUnmounted(() => {
+    window.ipc.off('download-update', onDownloadUpdate);
+    window.ipc.off('download-progress', onDownloadProgress)
 })
 
 function downloadAndReadHash() {

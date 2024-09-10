@@ -168,7 +168,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                     }
                     if (this.retry[downloadedSize] < this.retryMax) {
                         this.retry[downloadedSize] += 1;
-                        console.log('retry', downloadedSize, this.retry[downloadedSize]);
+
                         this.download(downloadedSize);
                     } else {
                         this.downloadEnd(false, e);

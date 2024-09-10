@@ -65,9 +65,16 @@ export class DownloadManger {
         const item = this.downloadItemMap[url];
         if (item) {
             item.downloadPause();
+            // 主动删除，则不再触发 end 等事件，因为 end 事件会提示用下载失败等，而删除不需要提示。
+            // 所以这边可以直接解绑所有事件
             item.removeAllListeners();
-            delete this.downloadItemMap[url];
-            removeFile && (await remove(item.file));
+            delete this.downloadItemMap[item.url];
+            if (removeFile) {
+                setTimeout(() => {
+                    remove(item.file);
+                }, 1000);
+            }
+            this.checktNextTask();
         }
     }
 
@@ -91,17 +98,23 @@ export class DownloadManger {
     private async downloadEnd(item: IDownloadItem) {
         process.nextTick(() => {
             // 让其他监听的事件先执行完毕，再销毁这个下载实例
-            this.deleteTask(item.url);
+            const downloadItem = this.downloadItemMap[item.url];
+            if (downloadItem) {
+                downloadItem.removeAllListeners();
+                delete this.downloadItemMap[item.url];
+            }
         });
+        this.checktNextTask();
+    }
 
-        // 如果有排队等待的则进行新的下载
+    private checktNextTask() {
         if (this.downloadWaitTasks.length > 0) {
             const nextItem = this.downloadWaitTasks[0];
             this.createTask(nextItem.url);
         }
     }
 
-    async clearTasks(removeFile = false) {
+    async deleteALLTasks(removeFile = false) {
         const allTaskItems = Object.values(this.downloadItemMap);
         allTaskItems.forEach((item) => {
             this.deleteTask(item.url, removeFile);
