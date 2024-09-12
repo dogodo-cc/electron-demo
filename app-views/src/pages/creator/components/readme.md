@@ -2,3 +2,4 @@
 -   layout 支持横向 or 纵向布局
 -   layout 显示的 panel 支持 tab 切换
 -   最外面 resize 的时候 layout 可以保持比例变化
+-   支持面板拖拽

@@ -3,19 +3,24 @@ import type { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
     {
-        path: '/demo/',
-        component: () => import('./pages/demo/layout.vue'),
+        path: '/',
+        name: 'home',
+        redirect: '/demo/download',
         meta: {
-            title: 'electron demo',
+            hideInNav: true,
+        },
+    },
+    {
+        path: '/demo/',
+        component: () => import('./pages/demo/index.vue'),
+        meta: {
+            title: '操练场',
         },
         children: [
             {
                 path: 'download',
                 name: 'download',
                 component: () => import('./pages/demo/download.vue'),
-                meta: {
-                    icon: '',
-                },
             },
             {
                 path: 'open-window',
@@ -25,18 +30,9 @@ export const routes: RouteRecordRaw[] = [
         ],
     },
     {
-        path: '/',
-        name: 'home',
-        redirect: '/demo/download',
-        meta: {
-            hideInNav: true,
-        },
-    },
-
-    {
-        path: '/layout',
-        name: 'layout',
-        component: () => import('./pages/layout/index.vue'),
+        path: '/creator',
+        name: 'creator 4.0',
+        component: () => import('./pages/creator/index.vue'),
     },
     {
         path: '/panel/:name',

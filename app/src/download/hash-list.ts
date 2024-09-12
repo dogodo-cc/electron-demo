@@ -33,6 +33,7 @@ async function start() {
                 console.log('win32_md5', o.win32_md5);
                 await writeJSON(join(app.getPath('downloads'), 'CocosDashboard/list.json'), list);
             }
+            console.log('all done!!');
         });
 }
 
@@ -41,7 +42,6 @@ async function download(url: string): Promise<string> {
         const downloadItem = await downloadManger.createTask(url);
         downloadItem.on('download:end', async (item: IDownloadItem, success: boolean) => {
             if (success) {
-                console.log('existsSync:', existsSync(item.file));
                 const md5 = await getFileMD5(item.file);
                 resolve(md5);
             }

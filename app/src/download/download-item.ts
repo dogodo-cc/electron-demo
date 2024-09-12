@@ -211,7 +211,8 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                 .head(url)
                 .then((res) => {
                     const contentLength = res.headers['content-length'];
-                    if (contentLength) {
+
+                    if (contentLength && res.headers['accept-ranges'] === 'bytes') {
                         resolve(Number(contentLength));
                     }
                     resolve(0);

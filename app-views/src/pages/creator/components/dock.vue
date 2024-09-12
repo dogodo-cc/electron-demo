@@ -2,14 +2,13 @@
     <div class="dock-frame">
         <Layout :direction="layout.direction" :layout="layout" />
     </div>
-    <a-float-button href="/"></a-float-button>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from 'vue';
 import Layout from "./layout.vue";
-import type { ILayoutItem } from './type.d.js'
+import type { ILayoutItem } from './type.js'
 
 
 const layout: Ref<ILayoutItem> = ref({

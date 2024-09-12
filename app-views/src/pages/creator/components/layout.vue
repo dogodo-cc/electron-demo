@@ -3,7 +3,7 @@
         <template v-if="layout.layouts?.length">
             <template v-for="(item, index) in layout.layouts" :key="item">
                 <Layout :layout="item" :direction="item.direction" />
-                <div v-if="index < layout.layouts.length - 1" class="dock-layout-line"></div>
+                <div class="dock-layout-line" v-if="index < layout.layouts.length - 1"></div>
             </template>
         </template>
         <div v-else class="dock-layout-groups">
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { ILayoutItem } from './type.d.js'
+import type { ILayoutItem } from './type.js'
 const { layout } = defineProps<{
     layout: ILayoutItem,
     direction: ILayoutItem['direction']

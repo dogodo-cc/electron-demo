@@ -13,23 +13,18 @@ ipcMain.on('download-create', async (_, url) => {
 
     const _item = downloadItem.pickItem();
     mergeItemToList(_item);
-    broadcast('download-update', list);
 
     downloadItem.on('download:start', (item: IDownloadItem) => {
         mergeItemToList(item);
-        broadcast('download-update', list);
         console.log('开始下载：', item.url, list);
     });
 
     downloadItem.on('download:progress', (item: IDownloadItem) => {
-        // console.log('正在下载：', item.percent);
         mergeItemToList(item);
-        broadcast('download-progress', item);
     });
 
     downloadItem.on('download:end', (item: IDownloadItem, success: boolean, error?: Error) => {
         mergeItemToList(item);
-        broadcast('download-update', list);
         console.log('结束下载：', item.url, success, error, list);
     });
 });
@@ -45,4 +40,5 @@ function mergeItemToList(item: IDownloadItem) {
     } else {
         list.push(item);
     }
+    broadcast('download-update', list);
 }
