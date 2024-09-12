@@ -5,7 +5,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    root: './app-views',
+    root: './',
     build: {
         outDir: '../app/node_modules/.views',
         emptyOutDir: true,

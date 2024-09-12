@@ -4,7 +4,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import Dock from './components/dock.vue'
 </script>
 

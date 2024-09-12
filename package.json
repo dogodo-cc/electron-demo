@@ -6,24 +6,20 @@
         "make": "pnpm run web:build && pnpm run app:build && node ./scripts/make.mjs",
         "app:dev": "cd ./app && tsc --watch",
         "app:build": "cd ./app && tsc",
-        "web:dev": "vite --port 5555",
-        "web:build": "vue-tsc -b && vite build",
-        "web:preview": "vite preview"
+        "web:dev": "cd ./app-views && pnpm run dev",
+        "web:build": "cd ./app-views && pnpm run build",
+        "web:preview": "cd ./app-views && pnpm run preview"
     },
     "packageManager": "pnpm@9.0.0",
     "devDependencies": {
         "@electron/asar": "^3.2.8",
         "@types/fs-extra": "^11.0.4",
-        "@vitejs/plugin-vue": "^5.1.2",
         "axios": "^1.7.4",
         "electron": "32.0.1",
         "electron-devtools-installer": "^3.2.0",
         "extract-zip": "^2.0.1",
         "fs-extra": "^11.2.0",
         "progress": "^2.0.3",
-        "typescript": "^5.5.4",
-        "unplugin-vue-components": "^0.27.4",
-        "vite": "^5.4.3",
-        "vue-tsc": "^2.1.6"
+        "typescript": "^5.5.4"
     }
 }

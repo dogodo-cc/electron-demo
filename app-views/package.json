@@ -1,5 +1,10 @@
 {
     "type": "module",
+    "scripts": {
+        "dev": "vite --port 5555",
+        "build": "vue-tsc -b && vite build",
+        "preview": "vite preview"
+    },
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
         "ant-design-vue": "^4.2.3",
@@ -7,5 +12,11 @@
         "lodash": "^4.17.21",
         "vue": "^3.5.3",
         "vue-router": "4"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.1.2",
+        "unplugin-vue-components": "^0.27.4",
+        "vite": "^5.4.3",
+        "vue-tsc": "^2.1.6"
     }
 }

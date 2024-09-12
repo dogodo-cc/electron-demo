@@ -59,7 +59,7 @@ function onDownloadUpdate(_: any, list: IDownloadItem[]) {
     taskList.value = list;
 }
 
-function onDownloadProgress(_, item: IDownloadItem) {
+function onDownloadProgress(_: any, item: IDownloadItem) {
     const task = taskList.value.find(v => v.url === item.url);
     if (task) {
         task.percent = item.percent;

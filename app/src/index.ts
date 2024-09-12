@@ -7,7 +7,11 @@ import './download/hash-list.js';
 import './menu/index.js';
 import './window-center.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
-import './devtool.cjs';
+
+const isPackaged = app.isPackaged || __dirname.includes('asar');
+if (!isPackaged) {
+    await import('./devtool.cjs');
+}
 
 let main: BrowserWindow | null = null;
 const createWindow = () => {
@@ -36,8 +40,18 @@ const createWindow = () => {
     main = mainWindow;
 
     // 加载 index.html
-    if (app.isPackaged || __dirname.includes('asar')) {
-        mainWindow.loadFile(join(__dirname, '../node_modules/.views/index.html'));
+    if (isPackaged) {
+        const viewLink = join(__dirname, '../node_modules/.views/index.html');
+        mainWindow.loadFile(viewLink);
+
+        mainWindow.webContents.on('will-navigate', (event, url) => {
+            // 如果不是 index.html，则阻止导航并重定向
+            if (!url.startsWith(viewLink)) {
+                event.preventDefault();
+                mainWindow.loadFile(viewLink);
+            }
+        });
+
         mainWindow.setTitle('打包模式');
     } else {
         mainWindow.loadURL('http://localhost:5555/');
@@ -69,5 +83,5 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.handle('app-is-packaged', () => {
-    return app.isPackaged || __dirname.includes('asar');
+    return isPackaged;
 });

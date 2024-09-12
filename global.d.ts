@@ -1,3 +1,5 @@
+// app 和 app-views 都会用到的类型在这边统一维护
+
 declare type IDownloadItem = {
     url: string;
     file: string;
