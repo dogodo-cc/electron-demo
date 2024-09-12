@@ -7,6 +7,8 @@ dist
 out/
 .electron/
 
+**/*.tsbuildinfo
+
 
 # 只用 pnpm 安装依赖
 package-lock.json
