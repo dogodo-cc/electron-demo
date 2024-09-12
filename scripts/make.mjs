@@ -6,6 +6,7 @@ import ProgressBar from 'progress';
 import axios from 'axios';
 import extract from 'extract-zip';
 import { spawnPromise } from './utils.mjs';
+// import appdmg from 'appdmg';
 
 const isDiy = false; // 是否使用定制的 electron 版本
 const root = process.cwd();
@@ -124,7 +125,7 @@ async function createDMG() {
     //     }
     // });
     // instance.on('finish', () => {
-    //     // console.log('dmg 打包完成!');
+    //     console.log('dmg 打包完成!');
     // });
     // instance.on('error', console.error);
     await spawnPromise('npx', ['appdmg', join(root, './scripts/dmg/release.json'), dmgPath], { cwd: root });
@@ -138,7 +139,7 @@ async function start() {
     await createAsar();
     await removeSouce();
     await updateIcns();
-    // await createDMG();
+    await createDMG();
     console.log('make success');
 }
 

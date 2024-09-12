@@ -18,8 +18,8 @@ importers:
         specifier: ^1.7.4
         version: 1.7.4
       electron:
-        specifier: 32.0.1
-        version: 32.0.1
+        specifier: 29.0.1
+        version: 29.0.1
       electron-devtools-installer:
         specifier: ^3.2.0
         version: 3.2.0
@@ -160,8 +160,8 @@ packages:
   electron-devtools-installer@3.2.0:
     resolution: {integrity: sha512-t3UczsYugm4OAbqvdImMCImIMVdFzJAHgbwHpkl5jmfu1izVgUcP/mnrPqJIpEeCK1uZGpt+yHgWEN+9EwoYhQ==}
 
-  electron@32.0.1:
-    resolution: {integrity: sha512-5Hd5Jaf9niYVR2hZxoRd3gOrcxPOxQV1XPV5WaoSfT9jLJHFadhlKtuSDIk3U6rQZke+aC7GqPPAv55nWFCMsA==}
+  electron@29.0.1:
+    resolution: {integrity: sha512-hsQr9clm8NCAMv4uhHlXThHn52UAgrHgyz3ubBAxZIPuUcpKVDtg4HPmx4hbmHIbYICI5OyLN3Ztp7rS+Dn4Lw==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -626,7 +626,7 @@ snapshots:
       tslib: 2.7.0
       unzip-crx-3: 0.2.0
 
-  electron@32.0.1:
+  electron@29.0.1:
     dependencies:
       '@electron/get': 2.0.3
       '@types/node': 20.16.1
