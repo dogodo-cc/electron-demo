@@ -28,10 +28,10 @@ async function start() {
             for (const o of list) {
                 o.darwin_md5 = await download(o.darwin);
                 console.log('darwin_md5', o.darwin_md5);
-                await writeJSON(join(app.getPath('downloads'), 'CocosDashboard/list.json'), list);
+                await writeJSON(join(app.getPath('downloads'), 'CocosDashboard/list.json'), list, { spaces: 4 });
                 o.win32_md5 = await download(o.win32);
                 console.log('win32_md5', o.win32_md5);
-                await writeJSON(join(app.getPath('downloads'), 'CocosDashboard/list.json'), list);
+                await writeJSON(join(app.getPath('downloads'), 'CocosDashboard/list.json'), list, { spaces: 4 });
             }
             console.log('all done!!');
         });
