@@ -107,7 +107,7 @@ export class DownloadManger {
         this.checktNextTask();
     }
 
-    private checktNextTask() {
+    checktNextTask() {
         if (this.downloadWaitTasks.length > 0) {
             const nextItem = this.downloadWaitTasks[0];
             this.createTask(nextItem.url);

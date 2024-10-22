@@ -4,7 +4,7 @@ import { broadcast } from '../ipc.js';
 import { join } from 'node:path';
 import type { IDownloadItem } from './type.js';
 
-const downloadManger = new DownloadManger(join(app.getPath('downloads'), 'CocosDashboard'));
+const downloadManger = new DownloadManger(join(app.getPath('downloads'), 'CocosDashboard_123'));
 
 const list: IDownloadItem[] = [];
 

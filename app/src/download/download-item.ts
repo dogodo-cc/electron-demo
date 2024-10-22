@@ -50,6 +50,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
     file: string;
     contentLength: number;
     percent: number;
+    receivedBytes: number;
     isPause?: boolean;
     isWait?: boolean;
     isLoading?: boolean;
@@ -66,16 +67,20 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
         this.url = url;
         this.contentLength = 0;
         this.percent = 0;
+        this.receivedBytes = 0;
         this.file = file;
         this.chunkSize = chunkSize;
     }
 
     // 开始下载
     async downloadStart() {
+        this.isPause = false;
+        this.isWait = false;
+        this.isLoading = true;
         // 每次下载都请求一次 contentLength 方便和本地数据做对比
         const contentLength = await this.getContentLength(this.url);
         if (!contentLength) {
-            console.log(`${this.url} content-length is invilod: ${contentLength}`);
+            console.log(`${this.url} content-length is invalid: ${contentLength}`);
             this.downloadEnd(false);
             return;
         }
@@ -99,9 +104,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
 
         this.contentLength = contentLength;
         this.percent = size / contentLength;
-        this.isPause = false;
-        this.isWait = false;
-        this.isLoading = true;
+        this.receivedBytes = size;
         this.bytesPerSecond = 0;
 
         ensureDir(dirname(this.file)); // 每次下载都确保一下路径是存在的，避免创建文件的错误
@@ -156,6 +159,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                 })
                 .then(() => {
                     this.percent = currentChunkEnd / (this.contentLength - 1);
+                    this.receivedBytes = currentChunkEnd;
                     const endTime = Date.now();
                     this.bytesPerSecond = ((currentChunkEnd - downloadedSize) / (endTime - startTime)) * 1000;
                     this.emit('download:progress', this.pickItem());
@@ -193,7 +197,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
 
     // 用于传递数据的 item，需要剥离一些不可序列化的数据
     pickItem(): IDownloadItem {
-        const { url, file, contentLength, percent, isPause, isWait, isLoading, bytesPerSecond } = this;
+        const { url, file, contentLength, percent, isPause, isWait, isLoading, bytesPerSecond, receivedBytes } = this;
         return {
             url,
             file,
@@ -203,6 +207,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
             isWait,
             isLoading,
             bytesPerSecond,
+            receivedBytes,
         };
     }
     private getContentLength(url: string): Promise<number> {
@@ -211,8 +216,7 @@ export class DownloadItem extends DownloadItemEmitter implements IDownloadItem {
                 .head(url)
                 .then((res) => {
                     const contentLength = res.headers['content-length'];
-
-                    if (contentLength && res.headers['accept-ranges'] === 'bytes') {
+                    if (contentLength) {
                         resolve(Number(contentLength));
                     }
                     resolve(0);

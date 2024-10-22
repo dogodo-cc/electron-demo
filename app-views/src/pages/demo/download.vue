@@ -30,13 +30,17 @@ function bytesToSize(bytes: number): string {
     let i = Math.floor(Math.log(bytes) / Math.log(1024));
     return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + units[i];
 }
+// const name = '380_'
+const name = 'hello'
+const links = [
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}1.zip`,
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}2.zip`,
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}3.zip`,
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}4.zip`,
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}5.zip`,
+    `http://ftp.cocos.org/TestBuilds/Dashboard/local-test/1/${name}6.zip`
+]
 
-
-const url = 'https://www.90s.co/videos/hello.zip';
-const url2 = 'http://ftp.cocos.org/TestBuilds/Editor-3d/v3.8.4/CocosCreator-v3.8.4-win-082913.zip'
-const url3 = 'http://ftp.cocos.org/TestBuilds/Editor-3d/v3.8.4/CocosCreator-v3.8.4-mac-082613.zip';
-
-const links = [url, url2, url3];
 
 const taskList = ref<IDownloadItem[]>([]);
 
