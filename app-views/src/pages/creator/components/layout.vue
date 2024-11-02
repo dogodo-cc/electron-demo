@@ -6,27 +6,16 @@
                 <div class="dock-layout-line" v-if="index < layout.layouts.length - 1"></div>
             </template>
         </template>
-        <div v-else class="dock-layout-groups">
-            <a-tabs v-model:activeKey="activeKey" :tabBarGutter="10">
-                <a-tab-pane v-for="item in layout.panels" :key="item.name" :tab="item.name">
-                    <iframe :src="item.url" frameborder="0"></iframe>
-                </a-tab-pane>
-            </a-tabs>
+        <div v-else-if="layout.panels" class="dock-layout-groups">
+            <PagePanel :panels="layout.panels" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { ILayoutItem } from './type.js'
-const { layout } = defineProps<{
-    layout: ILayoutItem,
-    direction: ILayoutItem['direction']
-}>()
-
-const activeKey = ref(layout.panels?.length ? layout.panels[0].name : '');
-
-
+import PagePanel from './panel.vue'
+const { layout } = defineProps<{ layout: ILayoutItem, direction: ILayoutItem['direction'] }>()
 
 </script>
 
@@ -61,19 +50,6 @@ const activeKey = ref(layout.panels?.length ? layout.panels[0].name : '');
     .dock-layout-line {
         flex-shrink: 0;
         background-color: blueviolet;
-    }
-
-    & .ant-tabs,
-    & .ant-tabs-content-holder,
-    & .ant-tabs-content {
-        height: 100%;
-    }
-
-    iframe {
-        width: 100%;
-        height: 100%;
-        max-width: 100%;
-        max-height: 100%;
     }
 }
 </style>

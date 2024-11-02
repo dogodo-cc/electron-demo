@@ -1,5 +1,5 @@
 <template>
-    <div class="page-panel">
+    <div class="page-panel-common">
         <span>{{ name }}</span>
     </div>
 </template>
@@ -10,7 +10,7 @@ const { name } = defineProps<{
 </script>
 
 <style>
-.page-panel {
+.page-panel-common {
     width: 100vw;
     height: 100vh;
     display: flex;

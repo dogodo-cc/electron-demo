@@ -5,11 +5,11 @@ const isPackaged = ref<boolean>(false);
 
 
 function openChildWin() {
-  window.ipc.send('open-child-win')
+  window.ipc?.send('open-child-win')
 }
 
 async function winOpen() {
-  const url = await window.ipc.invoke('get-window-url');
+  const url = await window.ipc?.invoke('get-window-url');
   console.log(url);
   window.open(url, '子窗口')
 }
@@ -21,14 +21,14 @@ function winOpenOnline() {
 onMounted(async () => {
   window.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    window.ipc.send('show-context-menu');
+    window.ipc?.send('show-context-menu');
   });
 
-  window.ipc.on('context-menu-command', (e, command) => {
+  window.ipc?.on('context-menu-command', (e, command) => {
     console.log(e, command);
   });
 
-  isPackaged.value = await window.ipc.invoke('app-is-packaged')
+  isPackaged.value = await window.ipc?.invoke('app-is-packaged')
 })
 </script>
 

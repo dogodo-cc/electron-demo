@@ -59,6 +59,15 @@ const layout: Ref<ILayoutItem> = ref({
                                 url: 'http://localhost:5555/#/panel/project'
                             }
                         ]
+                    },
+                    {
+                        direction: 'column',
+                        panels: [
+                            {
+                                name: 'console',
+                                url: 'http://localhost:5555/#/panel/console'
+                            }
+                        ]
                     }
                 ],
 

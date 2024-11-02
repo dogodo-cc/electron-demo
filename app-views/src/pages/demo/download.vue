@@ -46,16 +46,16 @@ const taskList = ref<IDownloadItem[]>([]);
 
 
 function download(link: string) {
-    window.ipc.send('download-create', link);
+    window.ipc?.send('download-create', link);
 }
 
 function downloadTogglePause(item: IDownloadItem) {
     if (item.isPause) {
         console.log('继续下载')
-        window.ipc.send('download-create', item.url);
+        window.ipc?.send('download-create', item.url);
     } else {
         console.log('暂停下载')
-        window.ipc.send('download-pause', item.url);
+        window.ipc?.send('download-pause', item.url);
     }
 }
 
@@ -71,16 +71,16 @@ function onDownloadProgress(_: any, item: IDownloadItem) {
     }
 }
 
-window.ipc.on('download-update', onDownloadUpdate);
-window.ipc.on('download-progress', onDownloadProgress)
+window.ipc?.on('download-update', onDownloadUpdate);
+window.ipc?.on('download-progress', onDownloadProgress)
 
 onUnmounted(() => {
-    window.ipc.off('download-update', onDownloadUpdate);
-    window.ipc.off('download-progress', onDownloadProgress)
+    window.ipc?.off('download-update', onDownloadUpdate);
+    window.ipc?.off('download-progress', onDownloadProgress)
 })
 
 function downloadAndReadHash() {
-    window.ipc.send('start-write-hash');
+    window.ipc?.send('start-write-hash');
 }
 </script>
 
