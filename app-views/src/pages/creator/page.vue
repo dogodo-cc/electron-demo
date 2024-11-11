@@ -1,12 +1,18 @@
 <template>
     <div class="page-panel-common">
-        <span>{{ name }}</span>
+        <div>
+            <span>{{ name }}</span>
+            <div style="font-size: 14px;">{{ route.query.path }}</div>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 const { name } = defineProps<{
     name: string
 }>()
+
+const route = useRoute()
 </script>
 
 <style>

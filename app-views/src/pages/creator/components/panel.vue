@@ -1,8 +1,8 @@
 <template>
     <div class="page-panel">
         <a-tabs v-model:activeKey="activeKey" :tabBarGutter="10">
-            <a-tab-pane v-for="item in panels" :key="item.name" :tab="item.name">
-                <iframe :src="item.url" frameborder="0"></iframe>
+            <a-tab-pane v-for="(item, index) in panels" :key="item.name" :tab="item.name">
+                <iframe :src="`${item.url}?path=${path}.panels[${index}]`" frameborder="0"></iframe>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -10,8 +10,9 @@
 <script setup lang="ts">
 import type { ILayoutPanel } from './type.js'
 import { ref } from 'vue'
-const { panels } = defineProps<{
-    panels: ILayoutPanel[]
+const { panels, path } = defineProps<{
+    panels: ILayoutPanel[],
+    path: string
 }>()
 
 const activeKey = ref(panels?.length ? panels[0].name : '');

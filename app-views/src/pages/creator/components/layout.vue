@@ -2,12 +2,12 @@
     <div class="dock-layout" :data-direction="direction">
         <template v-if="layout.layouts?.length">
             <template v-for="(item, index) in layout.layouts" :key="item">
-                <Layout :layout="item" :direction="item.direction" />
+                <Layout :layout="item" :direction="item.direction" :path="`${path}.layouts[${index}]`" />
                 <div class="dock-layout-line" v-if="index < layout.layouts.length - 1"></div>
             </template>
         </template>
         <div v-else-if="layout.panels" class="dock-layout-groups">
-            <PagePanel :panels="layout.panels" />
+            <PagePanel :panels="layout.panels" :path="path" />
         </div>
     </div>
 </template>
@@ -15,7 +15,11 @@
 <script setup lang="ts">
 import type { ILayoutItem } from './type.js'
 import PagePanel from './panel.vue'
-const { layout } = defineProps<{ layout: ILayoutItem, direction: ILayoutItem['direction'] }>()
+const { layout, path } = defineProps<{
+    layout: ILayoutItem,
+    direction: ILayoutItem['direction'],
+    path: string,
+}>()
 
 </script>
 
