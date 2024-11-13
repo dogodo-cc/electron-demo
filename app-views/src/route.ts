@@ -32,20 +32,19 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/creator",
     name: "creator 4.0",
-    component: () => import("./pages/creator/index.vue"),
+    component: () => import("./pages/creator/index.vue"), // 主页
   },
   {
-    path: "/panel/:name",
-    props: true,
-    component: () => import("./pages/creator/page.vue"),
+    path: "/pop-win",
+    component: () => import("./pages/creator/index-pop.vue"), // 弹出页
     meta: {
       hideInNav: true,
     },
   },
   {
-    path: "/sub-win/:name/:url",
+    path: "/panel/:name",
     props: true,
-    component: () => import("./pages/creator/sub-window.vue"),
+    component: () => import("./pages/creator/page.vue"), // 通用页
     meta: {
       hideInNav: true,
     },

@@ -1,12 +1,14 @@
 <template>
-    <div class="main-window">
-        <div class="header">header</div>
+    <div class="pop-window">
         <layoutWrap :layout-id="layoutId" />
-        <div class="footer">footer</div>
     </div>
 </template>
 
 <script setup lang="ts">
+/**
+ * 这个页面是用于弹出面板时渲染的，它和主页都拥有完整的 layoutWrap 布局能力
+ * 区别在于主页有 header 和 footer
+ */
 import { ref } from "vue";
 import type { Ref } from 'vue';
 
@@ -22,15 +24,10 @@ const layoutId = (route.query.layoutId as LocationQueryValue) ?? '';
 </script>
 
 <style>
-.main-window {
+.pop-window {
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    .header,
-    .footer {
-        text-align: center;
-    }
 
     .dock-frame {
         flex: 1;

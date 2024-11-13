@@ -7,6 +7,7 @@
     "dependencies": {
         "@ant-design/icons-vue": "^7.0.1",
         "ant-design-vue": "^4.2.5",
+        "dot-prop": "^9.0.0",
         "vue": "^3.5.12",
         "vue-router": "4.4.5"
     },

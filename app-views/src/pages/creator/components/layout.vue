@@ -6,18 +6,17 @@
                 <div class="dock-layout-line" v-if="index < layout.layouts.length - 1"></div>
             </template>
         </template>
-        <div v-else-if="layout.panels" class="dock-layout-groups">
-            <PagePanel :panels="layout.panels" :path="path" />
+        <div v-else-if="layout.panels?.length" class="dock-layout-groups">
+            <LayoutPanel :panels="layout.panels" :path="path" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { ILayoutItem } from './type.js'
-import PagePanel from './panel.vue'
+import LayoutPanel from './layout-panel.vue'
 const { layout, path } = defineProps<{
-    layout: ILayoutItem,
-    direction: ILayoutItem['direction'],
+    layout: MyLayout.ILayoutItem,
+    direction?: MyLayout.ILayoutItem['direction'],
     path: string,
 }>()
 

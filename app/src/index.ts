@@ -72,7 +72,7 @@ setTimeout(() => {
       webSecurity: true,
     },
   });
-  win.loadURL("http://localhost:5555/#/sub-win/abc/efg");
+  win.loadURL("http://localhost:5555/#/pop-win?layoutId=1234");
 }, 1000 * 3);
 
 // 这段程序将会在 Electron 结束初始化
